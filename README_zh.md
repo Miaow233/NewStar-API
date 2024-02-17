@@ -12,23 +12,27 @@
 ### Running the server
 #### 阅读时间较长，但有很多东西需要了解。请花点时间看完。
 1. 使用 OpenAPI 生成器生成应用程序：
-假设您有 Java (1.8+) 和 [有生成应用程序的 jar](https://github.com/openapitools/openapi-generator#13---download-jar) 文件，请运行
-```
-java -jar {path_to_jar_file} generate -g nodejs-express-server -i {openapi yaml/json file} -o {target_directory_where_the_app_will_be_installed} 
-```
-If you do not have the jar, or do not want to run Java from your local machine, follow instructions on the [OpenAPITools page](https://github.com/openapitools/openapi-generator). You can run the script online, on docker, and various other ways.
+    假设您有 Java (1.8+) 和 [有生成应用程序的 jar](https://github.com/openapitools/openapi-generator#13---download-jar) 文件，请运行
+    ```
+    java -jar {path_to_jar_file} generate -g nodejs-express-server -i {openapi yaml/json file} -o {target_directory_where_the_app_will_be_installed} 
+    ```
+    如果没有 jar，或者不想在本地机器上运行 Java，请按照 [OpenAPITools 页面](https://github.com/openapitools/openapi-generator) 上的说明操作。您可以通过在线、docker 和其他各种方式运行脚本。
 2. 进入你定义的生成目录。这里有一个完全正常运行的 NodeJS-ExpressJs 服务器在等着你。这一点很重要，因为代码是由你来修改和更新的！查看 config.js，看看其中的设置是否符合你的要求--服务器将在端口 3000 上运行，文件将上传到一个新目录 "uploaded_files"。
 3. 服务器将以 openapi.yaml 文件为基础，该文件位于 /api/openapi.yaml。该文件与生成应用程序时使用的文件不完全相同：
-I.  如果在路径对象中定义了 `application/json` contentBody，生成器会将其移动到 openapi 文档的组件/模式部分。
-II. 每个进程都添加了一个新元素--"x-eov-operation-handler: controllers/PetController"，用于引导调用该文件。
-III. 我们有一个将 operationId 转换为方法的 Java 应用程序，以及一个执行相同过程以调用该方法的 nodeJS 脚本。两者都将方法转换为 "camelCase"，但可能存在差异。请注意操作 ID 名称，并查看它们是否在 `controllers` 和 `services` 目录中有所体现。
-4. 花时间了解应用程序的结构。其中可能有错误，也可能有不符合您期望的设置和业务逻辑。与其放弃这个解决方案，另寻他法，不如看看能否让生成的代码为你所用。
-简要说明一下（后面会有更详细的说明）： 应用程序从调用 index.js 开始（稍后将在此处插入数据库）。它调用 expressServer.js，这是 express.js 和 openapi-validator 启动的地方。这是一个重要文件。学习它。所有对 openapi.yaml 文档中配置的端点的调用都会调用 `controllers/{name_of_tag_which_the_operation_was_associated_with}.js`，这是一个很小的方法。所有业务逻辑都在 `controllers/Controller.js` 中，并从那里转到 `services/{name_of_tag_which_the_operation_was_associated_with}.js`。
 
-5. 了解*将要发生的事情后，启动应用程序并确保一切正常：
-```
-npm start
-```
+    I.  如果在路径对象中定义了 `application/json` contentBody，生成器会将其移动到 openapi 文档的组件/模式部分。
+
+    II. 每个进程都添加了一个新元素--"x-eov-operation-handler: controllers/PetController"，用于引导调用该文件。
+
+    III. 我们有一个将 operationId 转换为方法的 Java 应用程序，以及一个执行相同过程以调用该方法的 nodeJS 脚本。两者都将方法转换为 "camelCase"，但可能存在差异。请注意操作 ID 名称，并查看它们是否在 `controllers` 和 `services` 目录中有所体现。
+4. 花时间了解应用程序的结构。其中可能有错误，也可能有不符合您期望的设置和业务逻辑。与其放弃这个解决方案，另寻他法，不如看看能否让生成的代码为你所用。
+
+    简要说明一下（后面会有更详细的说明）： 应用程序从调用 index.js 开始（稍后将在此处插入数据库）。它调用 expressServer.js，这是 express.js 和 openapi-validator 启动的地方。这是一个重要文件。学习它。所有对 openapi.yaml 文档中配置的端点的调用都会调用 `controllers/{name_of_tag_which_the_operation_was_associated_with}.js`，这是一个很小的方法。所有业务逻辑都在 `controllers/Controller.js` 中，并从那里转到 `services/{name_of_tag_which_the_operation_was_associated_with}.js`。
+
+5. 了解**将要**发生的事情后，启动应用程序并确保一切正常：
+    ```
+    npm start
+    ```
 ### Tests
 遗憾的是，我还没有编写任何单元测试。将来会有的。不过，该软件包确实包含了编写和运行测试所需的所有内容--mocha 和 sinon 以及相关库都包含在 package.js 中，并将通过 npm install 命令进行安装。
 
@@ -36,7 +40,7 @@ npm start
 (假设 config.js 未作任何更改）
 
 1. API 文档，并检查可用端点：
-http://localhost:3000/api-docs/. To
+http://localhost:3000/api-docs/.
 2. 下载 openapi.yaml 文档：http://localhost:3000/openapi。
 3. 对 openapi 文档中定义的端点的每次调用都会返回 200 以及请求中发送的所有参数和对象的列表。
 4. 需要安全保护的端点需要配置安全处理程序，然后才能返回成功的响应。此时，它们将返回[响应代码为 401](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)。
@@ -70,7 +74,7 @@ Currently a single file:
 - **.js** - 自动生成的代码，处理所有操作。控制器（Controller）是一个类，它与将向其发送请求的服务类一起构建。`openapi.yaml` 中定义的每个请求都有一个 operationId。operationId 是将被调用的方法的名称。每个方法都会接收请求和响应，并调用 `Controller.js` 处理请求和响应，同时添加应调用的服务方法以进行实际的业务逻辑处理。
 
 #### services/
-这就是 API Gateway 的终点，也是应用程序独特业务逻辑的起点。openapi.yaml` 中的每个端点都有一个变量 "x-openapi-router-service"，这是生成的服务类的名称。端点的 operationID 是将要调用的方法的名称。生成的代码提供了一个带有 try/catch 子句的简单承诺。成功的操作会调用通用的 `Service.js` 生成成功的响应（有效负载和响应代码），失败的操作会调用通用的 `Service.js` 生成包含错误对象和相关响应代码的响应。建议先自动生成一次服务，然后在初始构建后手动添加方法。
+这就是 API Gateway 的终点，也是应用程序独特业务逻辑的起点。`openapi.yaml` 中的每个端点都有一个变量 "x-openapi-router-service"，这是生成的服务类的名称。端点的 operationID 是将要调用的方法的名称。生成的代码提供了一个带有 try/catch 子句的简单承诺。成功的操作会调用通用的 `Service.js` 生成成功的响应（有效负载和响应代码），失败的操作会调用通用的 `Service.js` 生成包含错误对象和相关响应代码的响应。建议先自动生成一次服务，然后在初始构建后手动添加方法。
 
 - **index.js** - 加载为本项目生成的所有服务，并导出它们供 `openapiRouter.js` 动态使用。如果您想自定义您的服务，建议您在此处链接到您的控制器，并确保 codegen 不会重写该文件。
 
