@@ -103,6 +103,7 @@ export default class Controller {
             }
         })
         requestParams['headers'] = request.headers
+        requestParams['request'] = request
         return requestParams
     }
 

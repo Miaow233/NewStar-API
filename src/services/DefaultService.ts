@@ -1,25 +1,18 @@
 import { createCanvas, loadImage } from 'canvas'
+import { Request } from 'express'
 import { readFile } from 'fs/promises'
 import Service from './Service'
 import path from 'path'
 import config from '../config'
+
 /**
- * Hitokoto
- *
- * @param encode string (optional)
- * @param type string (optional)
- * @param unicode string 规定返回的json数据是否进行unicode编码。(* 本字段只有在参数encode设置为json时生效！) (optional)
- * @param callback string 设置此字段后 PoisonousAPI 将会以jsonp的形式返回数据，本字段内容将作为函数名。(* 本字段只有在参数encode设置为json时生效！) (optional)
- * @returns Promise
- * */
-export const apiHitokotoGET = async ({ encode, type, unicode, callback }: any) => {
+* 颜值评分
+*
+* returns Object
+* */
+export const apiFacercgGET = async () => {
     try {
-        return Service.successResponse({
-            encode,
-            type,
-            unicode,
-            callback,
-        })
+        return Service.successResponse({})
     } catch (e: any) {
         throw Service.rejectResponse(e.message || 'Invalid input', e.status || 405)
     }
@@ -37,32 +30,86 @@ export const apiHitokotoGET = async ({ encode, type, unicode, callback }: any) =
  * */
 export const apiImgholderGET = async ({ size, type, bg, fg, text }: any) => {
     try {
-        return Service.successResponse({
-            size,
-            type,
-            bg,
-            fg,
-            text,
-        })
+        // Parse size parameter
+        const [widthStr, heightStr] = size.split('x')
+        const width = parseInt(widthStr)
+        const height = parseInt(heightStr)
+
+        // Check if size parameter is valid
+        if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0 || width > 3000 || height > 3000) {
+            throw Service.rejectResponse('Invalid size parameter', 404)
+        }
+
+        // Check if type parameter is valid
+        const allowedTypes = ['png', 'jpeg', 'webp']
+        if (!allowedTypes.includes(type)) {
+            throw Service.rejectResponse('Invalid size parameter', 404)
+        }
+
+        // Create canvas
+        const canvas = createCanvas(width, height)
+        const ctx = canvas.getContext('2d')
+
+        // Set background color
+        ctx.fillStyle = bg || '#ffffff'
+        ctx.fillRect(0, 0, width, height)
+
+        // Set text color and font
+        ctx.fillStyle = fg || '#000000'
+        ctx.font = `${Math.floor(height / 10)}px Arial`
+
+        // Set text alignment
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+
+        // Draw text
+        if (text) ctx.fillText(text, width / 2, height / 2)
+
+        // Convert canvas to buffer
+        const buffer = canvas.toBuffer(`image/png`)
+        return Service.successResponse(buffer)
     } catch (e: any) {
         throw Service.rejectResponse(e.message || 'Invalid input', e.status || 405)
     }
 }
+
 /**
  * IP归属地
  *
  * ip String 需要查询的IP，多个IP可用|连接同时查询，返回json,当此参数内容为my时，返回本机ip。 (optional)
  * returns inline_response_200_1
  * */
-export const apiIpGET = async ({ ip }: any) => {
+export const apiIpGET = async ({ ip, request }: any) => {
+    const axios = require('axios')
     try {
-        return Service.successResponse({
-            ip,
-        })
-    } catch (e: any) {
-        throw Service.rejectResponse(e.message || 'Invalid input', e.status || 405)
+        const ipParam = ip;
+
+        let ipsToQuery;
+        if (ipParam === 'my') {
+            // 如果参数是 'my'，则查询本机 IP
+            ipsToQuery = [request.ip];
+        } else {
+            // 否则使用传递的 IP 参数并分割为单独的 IP 地址
+            ipsToQuery = ipParam.split('|');
+        }
+
+        // 使用 Promise.all() 并行查询每个 IP 的归属地信息
+        const ipLocationData = await Promise.all(ipsToQuery.map(async (ip: any) => {
+            const response = await axios.get(`http://ip-api.com/json/${ip}`);
+            const data = response.data;
+            return {
+                ip: data.query,
+                country: data.country,
+                area: data.org
+            };
+        }));
+
+        return Service.successResponse(ipLocationData);
+    } catch (error: any) {
+        throw Service.rejectResponse(error.message || 'Internal server error', error.status || 500)
     }
 }
+
 /**
  * Pixel-art
  *
@@ -106,50 +153,109 @@ export const apiKFCCrazyThursdayGET = async () => {
 }
 
 /**
- * Poisonous
- *
- * returns Object
- * */
-export const apiPoisonousGET = async () => {
-    const TEXT_DATA = (await readFile(path.join(config.ROOT_DIR, 'assets', 'kfcyl.txt'))).toString()
-    // read a random line from the file
-    const randomLine = TEXT_DATA.split('\n')[Math.floor(Math.random() * TEXT_DATA.split('\n').length)]
+* 二维码
+*
+* text String 二维码内容
+* size Integer 生成图片大小 (optional)
+* logo String 中心位置Logo (optional)
+* encode String 二维码返回的编码方式[raw, json] (optional)
+* level String 二维码容错率[L, M, Q, H] (optional)
+* bgcolor String 背景颜色 (optional)
+* fgcolor String 前景颜色 (optional)
+* returns inline_response_200
+* */
+export const apiQrcodeGET = async ({
+    text = 'Hello, World!',
+    size = 200,
+    logo = null,
+    encode = 'raw',
+    level = 'M',
+    bgcolor = 'white',
+    fgcolor = 'black',
+}: any) => {
+    const qr = require('qrcode')
+
+    // Function to load image from URL
+    const loadImageFromUrl = async (url: string) => {
+        try {
+            return await loadImage(url)
+        } catch (error) {
+            console.error('Error loading image from URL:', error)
+            return null
+        }
+    }
+
+    function colorNameToHex(color: string) {
+        const ctx = createCanvas(1, 1).getContext('2d');
+        ctx.fillStyle = color;
+        return ctx.fillStyle;
+    }
+
     try {
-        return Service.successResponse(randomLine)
+        const dark = colorNameToHex(bgcolor)
+        const light = colorNameToHex(fgcolor)
+
+        // Generate QR Code
+        const qrCodeDataUrl = await qr.toDataURL(text, {
+            errorCorrectionLevel: level,
+            width: size,
+            color: {
+                dark,
+                light,
+            },
+        })
+
+        // Load logo image if URL is provided
+        let logoImage = null
+        if (logo) {
+            logoImage = await loadImageFromUrl(logo)
+        }
+
+        // If logo image is loaded successfully, overlay it on QR Code
+        if (logoImage) {
+            const canvas = createCanvas(size, size)
+            const context = canvas.getContext('2d')
+
+            // Draw QR Code onto canvas
+            const qrImage = await loadImage(qrCodeDataUrl)
+            context.drawImage(qrImage, 0, 0, size, size)
+
+            // Calculate position for logo
+            const logoPositionX = (size - logoImage.width) / 2
+            const logoPositionY = (size - logoImage.height) / 2
+
+            // Draw logo onto canvas
+            context.drawImage(logoImage, logoPositionX, logoPositionY)
+
+            // Convert canvas to data URL
+            const qrCodeWithLogoDataUrl = canvas.toDataURL()
+
+            if (encode === 'raw') {
+                // Return raw image
+                return Service.successResponse(canvas.toBuffer('image/png'))
+            } else {
+                // Return JSON response
+                return Service.successResponse({
+                    qrCodeDataUrl: qrCodeWithLogoDataUrl,
+                })
+            }
+        } else {
+            // If logo image could not be loaded, return QR Code without logo
+            if (encode === 'raw') {
+                // Return raw image
+                return Service.successResponse(qrCodeDataUrl)
+            } else {
+                // Return JSON response
+                return Service.successResponse({
+                    qrCodeDataUrl: qrCodeDataUrl,
+                })
+            }
+        }
     } catch (e: any) {
         throw Service.rejectResponse(e.message || 'Invalid input', e.status || 405)
     }
 }
 
-/**
- * QRCode
- *
- * text String
- * size Integer  (optional)
- * logo String  (optional)
- * encode String  (optional)
- * level String  (optional)
- * bgcolor String  (optional)
- * fgcolor String  (optional)
- * fun String  (optional)
- * returns inline_response_200
- * */
-export const apiQrcodeGET = async ({ text, size, logo, encode, level, bgcolor, fgcolor, fun }: any) => {
-    try {
-        return Service.successResponse({
-            text,
-            size,
-            logo,
-            encode,
-            level,
-            bgcolor,
-            fgcolor,
-            fun,
-        })
-    } catch (e: any) {
-        throw Service.rejectResponse(e.message || 'Invalid input', e.status || 405)
-    }
-}
 /**
  * Translate
  *

@@ -1,12 +1,11 @@
 //@ts-nocheck
-
 import logger from '../logger';
 import controllers from '../controllers';
 import Services from '../services';
 import { Response, Request, NextFunction } from 'express';
 import { OpenApiRequest, OpenApiRequestMetadata } from 'express-openapi-validator/dist/framework/types';
 
-function handleError(err, request: Request, response: Response, next:NextFunction) {
+function handleError(err: any, request: Request, response: Response, next:NextFunction) {
   logger.error(err);
   const code = err.code || 400;
   response.status(code);

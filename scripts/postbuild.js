@@ -27,9 +27,13 @@ function copyFolderSync(source, target) {
 const sourceFolder = path.join(__dirname, '../src')
 const targetFolder = path.join(__dirname, '../build')
 
+if (!fs.existsSync(targetFolder)) {
+    fs.mkdirSync(targetFolder)
+}
+
 const folderToCopy = ['assets', 'public', 'views', 'openapi.yaml']
 
 folderToCopy.forEach((folder) => {
-    console.log(`Copying ${sourceFolder}\\${folder} to ${targetFolder}\\${folder}`)
+    console.log(`Copying ${path.join(sourceFolder, folder)} to ${path.join(targetFolder, folder)}`)
     copyFolderSync(path.join(sourceFolder, folder), path.join(targetFolder, folder))
 })

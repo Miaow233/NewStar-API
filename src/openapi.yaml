@@ -263,58 +263,64 @@ paths:
       deprecated: false
       operationId: apiQrcodeGET
       parameters:
-      - explode: true
+      - description: 二维码内容
+        example: Hello NewStar!
+        explode: true
         in: query
         name: text
         required: true
         schema:
           type: string
         style: form
-      - explode: true
+      - description: 生成图片大小
+        example: "200"
+        explode: true
         in: query
         name: size
         required: false
         schema:
           type: integer
         style: form
-      - explode: true
+      - description: 中心位置Logo
+        explode: true
         in: query
         name: logo
         required: false
         schema:
           type: string
         style: form
-      - explode: true
+      - description: 二维码返回的编码方式[raw, json]
+        example: raw
+        explode: true
         in: query
         name: encode
         required: false
         schema:
           type: string
         style: form
-      - explode: true
+      - description: 二维码容错率[L, M, Q, H]
+        example: M
+        explode: true
         in: query
         name: level
         required: false
         schema:
           type: string
         style: form
-      - explode: true
+      - description: 背景颜色
+        example: white
+        explode: true
         in: query
         name: bgcolor
         required: false
         schema:
           type: string
         style: form
-      - explode: true
+      - description: 前景颜色
+        example: black
+        explode: true
         in: query
         name: fgcolor
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: fun
         required: false
         schema:
           type: string
@@ -338,31 +344,16 @@ paths:
                     status: success
               schema:
                 $ref: '#/components/schemas/inline_response_200'
-          description: 成功
-        "400":
+          description: 成功[JSON]
+        x-200:成功[RAW]:
+          description: 成功[RAW]
           content:
-            application/json:
+            '*/*':
               schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 请求有误
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 参数错误
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 服务器错误
-        "502":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 网关错误
+                type: object
+                properties: {}
+                x-apifox-ignore-properties: []
+                x-apifox-orders: []
       security: []
       summary: 二维码
       tags: []
@@ -443,58 +434,13 @@ paths:
       x-apifox-status: developing
       x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-147954500-run
       x-eov-operation-handler: controllers/DefaultController
-  /api/poisonous:
-    get:
-      deprecated: false
-      operationId: apiPoisonousGET
-      parameters: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties: {}
-                type: object
-                x-apifox-ignore-properties: []
-                x-apifox-orders: []
-          description: 成功
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 请求有误
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 参数错误
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 服务器错误
-        "502":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 网关错误
-      security: []
-      summary: 毒鸡汤
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-147954541-run
-      x-eov-operation-handler: controllers/DefaultController
   /api/imgholder:
     get:
       deprecated: false
       operationId: apiImgholderGET
       parameters:
       - description: 设置需要的占位图大小，格式[宽度]x[高度]，最大3000x3000，超过或格式有误将返回404。
+        example: 300x300
         explode: true
         in: query
         name: size
@@ -512,6 +458,7 @@ paths:
           type: string
         style: form
       - description: 16进制的颜色代码，规定占位图的背景色。
+        example: '#ffffff'
         explode: true
         in: query
         name: bg
@@ -520,6 +467,7 @@ paths:
           type: string
         style: form
       - description: 16进制的颜色代码，规定占位图的文字颜色。
+        example: '#000000'
         explode: true
         in: query
         name: fg
@@ -538,7 +486,7 @@ paths:
       responses:
         "200":
           content:
-            application/json:
+            '*/*':
               schema:
                 type: string
           description: 成功
@@ -623,87 +571,6 @@ paths:
       x-apifox-folder: ""
       x-apifox-status: developing
       x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-147954550-run
-      x-eov-operation-handler: controllers/DefaultController
-  /api/hitokoto:
-    get:
-      deprecated: false
-      operationId: apiHitokotoGET
-      parameters:
-      - example: text,json
-        explode: true
-        in: query
-        name: encode
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: type
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: 规定返回的json数据是否进行unicode编码。(* 本字段只有在参数encode设置为json时生效！)
-        explode: true
-        in: query
-        name: unicode
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: 设置此字段后 PoisonousAPI 将会以jsonp的形式返回数据，本字段内容将作为函数名。(* 本字段只有在参数encode设置为json时生效！)
-        explode: true
-        in: query
-        name: callback
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                "1":
-                  summary: 成功示例
-                  value:
-                    type: a
-                    content: 错的不是我， 错的是世界。
-                    from: School Day
-              schema:
-                $ref: '#/components/schemas/inline_response_200_3'
-          description: 成功
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 请求有误
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 参数错误
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 服务器错误
-        "502":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400_1'
-          description: 网关错误
-      security: []
-      summary: 一言
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-147954551-run
       x-eov-operation-handler: controllers/DefaultController
   /api/pixel-art:
     post:
@@ -811,6 +678,52 @@ paths:
       x-apifox-status: developing
       x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-148130800-run
       x-eov-operation-handler: controllers/DefaultController
+  /api/facercg:
+    get:
+      deprecated: false
+      operationId: apiFacercgGET
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties: {}
+                type: object
+                x-apifox-orders: []
+                x-apifox-ignore-properties: []
+          description: 成功
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+          description: 请求有误
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+          description: 参数错误
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+          description: 服务器错误
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+          description: 网关错误
+      security: []
+      summary: 颜值评分
+      tags: []
+      x-apifox-folder: ""
+      x-apifox-status: developing
+      x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-148179340-run
+      x-eov-operation-handler: controllers/DefaultController
 components:
   requestBodies:
     inline_object:
@@ -874,23 +787,6 @@ components:
       required:
       - data
       - path
-    inline_response_400_1:
-      properties:
-        url:
-          type: string
-        time:
-          type: string
-        code:
-          type: integer
-        detail:
-          type: string
-        headers:
-          properties: {}
-          type: object
-          x-apifox-orders: []
-      required:
-      - code
-      - detail
     inline_response_200_1_trans_result:
       example:
         dst: dst
@@ -922,6 +818,23 @@ components:
       - from
       - to
       - trans_result
+    inline_response_400_1:
+      properties:
+        url:
+          type: string
+        time:
+          type: string
+        code:
+          type: integer
+        detail:
+          type: string
+        headers:
+          properties: {}
+          type: object
+          x-apifox-orders: []
+      required:
+      - code
+      - detail
     inline_response_200_2:
       example:
         Area: Area
@@ -941,22 +854,6 @@ components:
       - Area
       - Country
       - ip
-    inline_response_200_3:
-      example:
-        from: from
-        type: type
-        content: content
-      properties:
-        type:
-          type: string
-        content:
-          type: string
-        from:
-          type: string
-      required:
-      - content
-      - from
-      - type
     inline_object:
       properties:
         file:
