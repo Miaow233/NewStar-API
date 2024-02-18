@@ -1,5 +1,5 @@
 import { createCanvas, loadImage } from 'canvas'
-import { Error } from '../types/error'
+import { readFile } from 'fs/promises'
 import Service from './Service'
 import path from 'path'
 import config from '../config'
@@ -72,9 +72,9 @@ export const apiIpGET = async ({ ip }: any) => {
  * body File  (optional)
  * returns String
  * */
-export const apiPixelArtPOST = async ({ p = 7, s = 25, a, file }: any) => {
+export const apiPixelArtPOST = async ({ p = 0, s = 25, a, file }: any) => {
     try {
-        const Pixelit = require('./pixel-art/pixelit')
+        const Pixelit = require('./pixel-art/pixelit').Pixelit
         const img = await loadImage(path.join(config.FILE_UPLOAD_PATH, file))
         const canvas = createCanvas(img.width, img.height)
         const px = new Pixelit({
@@ -93,14 +93,29 @@ export const apiPixelArtPOST = async ({ p = 7, s = 25, a, file }: any) => {
         throw Service.rejectResponse(e.message || 'Invalid input', e.status || 405)
     }
 }
+
+export const apiKFCCrazyThursdayGET = async () => {
+    const TEXT_DATA = (await readFile(path.join(config.ROOT_DIR, 'assets', 'KFC.txt'))).toString()
+    // read a random line from the file
+    const randomLine = TEXT_DATA.split('\n')[Math.floor(Math.random() * TEXT_DATA.split('\n').length)]
+    try {
+        return Service.successResponse(randomLine)
+    } catch (e: any) {
+        throw Service.rejectResponse(e.message || 'Invalid input', e.status || 405)
+    }
+}
+
 /**
  * Poisonous
  *
  * returns Object
  * */
 export const apiPoisonousGET = async () => {
+    const TEXT_DATA = (await readFile(path.join(config.ROOT_DIR, 'assets', 'kfcyl.txt'))).toString()
+    // read a random line from the file
+    const randomLine = TEXT_DATA.split('\n')[Math.floor(Math.random() * TEXT_DATA.split('\n').length)]
     try {
-        return Service.successResponse({})
+        return Service.successResponse(randomLine)
     } catch (e: any) {
         throw Service.rejectResponse(e.message || 'Invalid input', e.status || 405)
     }

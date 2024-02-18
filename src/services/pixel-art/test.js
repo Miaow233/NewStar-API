@@ -1,4 +1,4 @@
-const pixelit = require("./Pixelit.js");
+const Pixelit = require("./pixelit.js").Pixelit
 const argv = require("yargs/yargs")(process.argv.slice(2))
   .command("$0 <input> <output>")
   .option("palette", {
@@ -20,7 +20,7 @@ const fs = require("fs");
 async function main() {
   const img = await loadImage(argv.input);
   const canvas = createCanvas(img.width, img.height);
-  const px = new pixelit({
+  const px = new Pixelit({
     from: img,
     to: canvas,
     palette: argv.palette,

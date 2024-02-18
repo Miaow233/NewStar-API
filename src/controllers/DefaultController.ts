@@ -10,6 +10,7 @@ import Controller from './Controller'
 import * as service from '../services/DefaultService'
 import { OpenApiRequest } from 'express-openapi-validator/dist/framework/types'
 import { Response } from 'express'
+import { ServerResponse } from 'http'
 export const apiHitokotoGET = async (request: OpenApiRequest, response: Response) => {
     await Controller.handleRequest(request, response, service.apiHitokotoGET)
 }
@@ -24,6 +25,11 @@ export const apiIpGET = async (request: OpenApiRequest, response: Response) => {
 
 export const apiPixelArtPOST = async (request: OpenApiRequest, response: Response) => {
     await Controller.handleRequest(request, response, service.apiPixelArtPOST)
+}
+
+export const apiKFCCrazyThursdayGET = async (request: OpenApiRequest, response: Response) => {
+    response.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});//设置response编码为utf-8
+    await Controller.handleRequest(request, response, service.apiKFCCrazyThursdayGET)
 }
 
 export const apiPoisonousGET = async (request: OpenApiRequest, response: Response) => {
