@@ -1,7 +1,7 @@
-import * as DefaultService from './DefaultService';
-import * as WallpaperService from './WallpaperService';
+import * as DefaultService from './DefaultService'
+import * as WallpaperService from './WallpaperService'
 
 export default {
-  DefaultService,
-  WallpaperService,
-};
+    DefaultService,
+    WallpaperService,
+}

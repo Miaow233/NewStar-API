@@ -10,6 +10,8 @@ const config = {
     OPENAPI_YAML: '',
     FULL_PATH: '',
     FILE_UPLOAD_PATH: '',
+    BAIDU_APP_ID: '20200403000411421',
+    BAIDU_APP_KEY: 'tb0bCTD9f9_Rq2PKECX8',
 }
 
 config.OPENAPI_YAML = path.join(config.ROOT_DIR, 'openapi.yaml')

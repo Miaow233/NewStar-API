@@ -29,7 +29,7 @@ paths:
         name: limit
         required: false
         schema:
-          type: integer
+          type: number
         style: form
       - description: 从第几张开始
         example: "0"
@@ -38,7 +38,7 @@ paths:
         name: skip
         required: false
         schema:
-          type: integer
+          type: number
         style: form
       - description: '[true, false]'
         example: "true"
@@ -54,7 +54,7 @@ paths:
         explode: true
         in: query
         name: order
-        required: false
+        required: true
         schema:
           type: string
         style: form
@@ -63,10 +63,7 @@ paths:
           content:
             application/json:
               schema:
-                properties: {}
-                type: object
-                x-apifox-ignore-properties: []
-                x-apifox-orders: []
+                $ref: '#/components/schemas/inline_response_200'
           description: 成功
         "400":
           content:
@@ -136,127 +133,6 @@ paths:
       x-apifox-folder: Wallpaper
       x-apifox-status: developing
       x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-147954361-run
-      x-eov-operation-handler: controllers/WallpaperController
-  /api/wallpaper/wallpaper:
-    get:
-      deprecated: false
-      operationId: apiWallpaperWallpaperGET
-      parameters:
-      - description: 壁纸分类[girl, animal, landscape, anime, drawn, mechanics, boy, game,
-          text]
-        example: girl
-        explode: true
-        in: query
-        name: category
-        required: true
-        schema:
-          type: string
-        style: form
-      - description: 要获取几张
-        example: "20"
-        explode: true
-        in: query
-        name: limit
-        required: false
-        schema:
-          type: integer
-        style: form
-      - description: 从第几张开始
-        example: "0"
-        explode: true
-        in: query
-        name: skip
-        required: false
-        schema:
-          type: integer
-        style: form
-      - description: '[true, false]'
-        example: "true"
-        explode: true
-        in: query
-        name: adult
-        required: false
-        schema:
-          type: boolean
-        style: form
-      - description: 壁纸排序方式[hot, new]
-        example: hot
-        explode: true
-        in: query
-        name: order
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties: {}
-                type: object
-                x-apifox-ignore-properties: []
-                x-apifox-orders: []
-          description: 成功
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400'
-          description: 请求有误
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400'
-          description: 参数错误
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400'
-          description: 服务器错误
-        "502":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/inline_response_400'
-          description: 网关错误
-        x-400:请求有误:
-          description: 请求有误
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  url:
-                    type: string
-                  time:
-                    type: string
-                  code:
-                    type: integer
-                  detail:
-                    type: string
-                  headers:
-                    type: object
-                    properties: {}
-                    x-apifox-orders: []
-                required:
-                - code
-                - detail
-                x-apifox-orders:
-                - url
-                - time
-                - code
-                - detail
-                - headers
-      security: []
-      summary: 横向壁纸
-      tags:
-      - Wallpaper
-      x-apifox-folder: Wallpaper
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-147954364-run
       x-eov-operation-handler: controllers/WallpaperController
   /api/qrcode:
     get:
@@ -343,7 +219,7 @@ paths:
                     code: 0
                     status: success
               schema:
-                $ref: '#/components/schemas/inline_response_200'
+                $ref: '#/components/schemas/inline_response_200_1'
           description: 成功[JSON]
         x-200:成功[RAW]:
           description: 成功[RAW]
@@ -401,7 +277,7 @@ paths:
                     - src: apple
                       dst: 苹果
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                $ref: '#/components/schemas/inline_response_200_2'
           description: 成功
         "400":
           content:
@@ -538,8 +414,15 @@ paths:
         "200":
           content:
             application/json:
+              examples:
+                "1":
+                  summary: 成功示例
+                  value:
+                    ip: 1.1.1.1
+                    Country: 美国
+                    Area: APNIC&CloudFlare公共DNS服务器
               schema:
-                $ref: '#/components/schemas/inline_response_200_2'
+                $ref: '#/components/schemas/inline_response_200_3'
           description: 成功
         "400":
           content:
@@ -724,6 +607,133 @@ paths:
       x-apifox-status: developing
       x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-148179340-run
       x-eov-operation-handler: controllers/DefaultController
+  /api/wallpaper/wallpaper:
+    get:
+      deprecated: false
+      operationId: apiWallpaperWallpaperGET
+      parameters:
+      - description: 壁纸分类[girl, animal, landscape, anime, drawn, mechanics, boy, game,
+          text]
+        example: girl
+        explode: true
+        in: query
+        name: category
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 要获取几张
+        example: "20"
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: number
+        style: form
+      - description: 从第几张开始
+        example: "0"
+        explode: true
+        in: query
+        name: skip
+        required: false
+        schema:
+          type: number
+        style: form
+      - description: '[true, false]'
+        example: "true"
+        explode: true
+        in: query
+        name: adult
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: 壁纸排序方式[hot, new]
+        example: hot
+        explode: true
+        in: query
+        name: order
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: 成功
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+          description: 请求有误
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+          description: 参数错误
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+          description: 服务器错误
+        "502":
+          content:
+            application/json:
+              examples:
+                "1":
+                  summary: 异常示例
+                  value:
+                    url: http://example.com
+                    time: 2019-08-24T14:15:22Z
+                    code: 400
+                    detail: string
+                    headers: {}
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+          description: 网关错误
+        x-400:请求有误:
+          description: 请求有误
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  time:
+                    type: string
+                  code:
+                    type: integer
+                  detail:
+                    type: string
+                  headers:
+                    type: object
+                    properties: {}
+                    x-apifox-orders: []
+                required:
+                - code
+                - detail
+                x-apifox-orders:
+                - url
+                - time
+                - code
+                - detail
+                - headers
+      security: []
+      summary: 横向壁纸
+      tags:
+      - Wallpaper
+      x-apifox-folder: Wallpaper
+      x-apifox-status: developing
+      x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-149027292-run
+      x-eov-operation-handler: controllers/WallpaperController
 components:
   requestBodies:
     inline_object:
@@ -732,6 +742,233 @@ components:
           schema:
             $ref: '#/components/schemas/inline_object'
   schemas:
+    inline_response_200_res_wallpaper:
+      example:
+        preview: preview
+        img: img
+        atime: 5
+        thumb: thumb
+        ivip: true
+        rule: rule
+        ncos: 0
+        store: store
+        url:
+        - url
+        - url
+        cr: true
+        favs: 5
+        rank: 1
+        wp: wp
+        xr: true
+        tag:
+        - tag
+        - tag
+        rule_new: rule_new
+        id: id
+        views: 6
+        cid:
+        - cid
+        - cid
+        desc: desc
+      properties:
+        ncos:
+          type: integer
+        thumb:
+          type: string
+        img:
+          type: string
+        views:
+          type: integer
+        url:
+          items:
+            type: string
+          type: array
+        cid:
+          items:
+            type: string
+          type: array
+        store:
+          type: string
+        rank:
+          type: integer
+        tag:
+          items:
+            type: string
+          type: array
+        rule:
+          type: string
+        preview:
+          type: string
+        wp:
+          type: string
+        xr:
+          type: boolean
+        rule_new:
+          type: string
+        favs:
+          type: integer
+        atime:
+          type: integer
+        cr:
+          type: boolean
+        id:
+          type: string
+        ivip:
+          type: boolean
+        desc:
+          type: string
+      required:
+      - atime
+      - cid
+      - cr
+      - desc
+      - favs
+      - id
+      - img
+      - ivip
+      - ncos
+      - preview
+      - rank
+      - rule
+      - rule_new
+      - store
+      - tag
+      - thumb
+      - url
+      - views
+      - wp
+      - xr
+    inline_response_200_res:
+      example:
+        wallpaper:
+        - preview: preview
+          img: img
+          atime: 5
+          thumb: thumb
+          ivip: true
+          rule: rule
+          ncos: 0
+          store: store
+          url:
+          - url
+          - url
+          cr: true
+          favs: 5
+          rank: 1
+          wp: wp
+          xr: true
+          tag:
+          - tag
+          - tag
+          rule_new: rule_new
+          id: id
+          views: 6
+          cid:
+          - cid
+          - cid
+          desc: desc
+        - preview: preview
+          img: img
+          atime: 5
+          thumb: thumb
+          ivip: true
+          rule: rule
+          ncos: 0
+          store: store
+          url:
+          - url
+          - url
+          cr: true
+          favs: 5
+          rank: 1
+          wp: wp
+          xr: true
+          tag:
+          - tag
+          - tag
+          rule_new: rule_new
+          id: id
+          views: 6
+          cid:
+          - cid
+          - cid
+          desc: desc
+      properties:
+        wallpaper:
+          items:
+            $ref: '#/components/schemas/inline_response_200_res_wallpaper'
+          type: array
+      required:
+      - wallpaper
+    inline_response_200:
+      example:
+        msg: msg
+        res:
+          wallpaper:
+          - preview: preview
+            img: img
+            atime: 5
+            thumb: thumb
+            ivip: true
+            rule: rule
+            ncos: 0
+            store: store
+            url:
+            - url
+            - url
+            cr: true
+            favs: 5
+            rank: 1
+            wp: wp
+            xr: true
+            tag:
+            - tag
+            - tag
+            rule_new: rule_new
+            id: id
+            views: 6
+            cid:
+            - cid
+            - cid
+            desc: desc
+          - preview: preview
+            img: img
+            atime: 5
+            thumb: thumb
+            ivip: true
+            rule: rule
+            ncos: 0
+            store: store
+            url:
+            - url
+            - url
+            cr: true
+            favs: 5
+            rank: 1
+            wp: wp
+            xr: true
+            tag:
+            - tag
+            - tag
+            rule_new: rule_new
+            id: id
+            views: 6
+            cid:
+            - cid
+            - cid
+            desc: desc
+        code: 2
+      properties:
+        msg:
+          type: string
+        res:
+          $ref: '#/components/schemas/inline_response_200_res'
+        code:
+          type: integer
+      required:
+      - code
+      - msg
+      - res
     inline_response_400:
       properties:
         url:
@@ -754,7 +991,7 @@ components:
       required:
       - code
       - detail
-    inline_response_200:
+    inline_response_200_1:
       example:
         path: path
         code: 6
@@ -787,7 +1024,7 @@ components:
       required:
       - data
       - path
-    inline_response_200_1_trans_result:
+    inline_response_200_2_trans_result:
       example:
         dst: dst
         src: src
@@ -796,7 +1033,7 @@ components:
           type: string
         dst:
           type: string
-    inline_response_200_1:
+    inline_response_200_2:
       example:
         trans_result:
         - dst: dst
@@ -812,7 +1049,7 @@ components:
           type: string
         trans_result:
           items:
-            $ref: '#/components/schemas/inline_response_200_1_trans_result'
+            $ref: '#/components/schemas/inline_response_200_2_trans_result'
           type: array
       required:
       - from
@@ -835,7 +1072,7 @@ components:
       required:
       - code
       - detail
-    inline_response_200_2:
+    inline_response_200_3:
       example:
         Area: Area
         ip: ip
