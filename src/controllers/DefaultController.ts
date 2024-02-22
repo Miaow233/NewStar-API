@@ -65,5 +65,5 @@ export const apiWebstackScreenshotGET = async (request: OpenApiRequest, response
     //@ts-ignore
     const cacheResult = cache(data.cache)
     if (cacheResult) response.setHeader('Cache-Control', cacheResult)
-    await Controller.handleRequest(request, response, service.apiWebstackScreenshotGET)
+    await Controller.handleRequest(request, response, service.apiScreenshotGET)
 }

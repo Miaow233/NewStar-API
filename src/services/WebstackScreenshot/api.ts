@@ -5,7 +5,8 @@ import { isHttp, launch, goto, screenshot, isString, isObject, parseViewportStri
 import Service from '../Service'
 export { TtypeOptions } from './types'
 
-let browser: Browser | null, page: Page | null
+let browser: Browser | null
+let page: Page | null
 
 const DEFAULT_VIEWPORT = {
     width: 1920,
@@ -15,7 +16,11 @@ const DEFAULT_VIEWPORT = {
 async function takeScreenshot(data: TtypeOptions): Promise<string | Buffer> {
     try {
         let { viewport, isMobile = false } = data
-        isMobile = Boolean(isMobile)
+        //@ts-ignore
+        if (isMobile === 'true') isMobile = true
+        //@ts-ignore
+        if (isMobile === 'false') isMobile = false
+
         // Whether or not it starts with the http protocol
         data.url = isHttp(data.url) ? data.url : `http://${data.url}`
 
@@ -24,9 +29,7 @@ async function takeScreenshot(data: TtypeOptions): Promise<string | Buffer> {
             browser = await puppeteer.launch({
                 executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
                 ...launchOpt,
-                // 添加其他选项，如果需要的话
             })
-        if (!browser) browser = await puppeteer.launch(launchOpt)
 
         // Creating a new tab
         page = await browser.newPage()
@@ -60,10 +63,12 @@ async function takeScreenshot(data: TtypeOptions): Promise<string | Buffer> {
         await page.goto(data.url, gotoOpt)
 
         const screenshotOpt = screenshot(data)
-        // Wait for a specific time after the page is loaded
-        await new Promise((resolve) => setTimeout(resolve, (gotoOpt.await || 0) + 1000))
+        // Wait after page rendering is complete (milliseconds)
+        //@ts-ignore
+        page.waitForTimeout((gotoOpt.await || 0) + 1000)
         return (await page.screenshot(screenshotOpt)) as Buffer | string
     } catch (error) {
+        // eslint-disable-next-line
         console.error(error)
         if (browser) {
             browser.close()
@@ -78,7 +83,7 @@ async function takeScreenshot(data: TtypeOptions): Promise<string | Buffer> {
     return ''
 }
 
-export async function apiWebstackScreenshotGET(data: TtypeOptions) {
+export async function apiScreenshotGET(data: TtypeOptions) {
     try {
         const projectUrl = 'https://github.com/Lete114/WebStack-Screenshot#properties'
         if (!data.url) {
@@ -91,10 +96,8 @@ export async function apiWebstackScreenshotGET(data: TtypeOptions) {
 
         if (screenshotOpt.encoding === 'base64') {
             const base64 = `data:image/${screenshotOpt.type};base64,${content}`
-            //res.setHeader('Content-Type', 'application/json; charset=utf-8')
             return Service.successResponse({ data: base64 })
         } else {
-            //res.setHeader('Content-Type', 'image/' + screenshotOpt.type)
             return Service.successResponse(content)
         }
     } catch (e: any) {

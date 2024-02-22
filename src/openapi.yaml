@@ -734,10 +734,10 @@ paths:
       x-apifox-status: developing
       x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-149027292-run
       x-eov-operation-handler: controllers/WallpaperController
-  /api/WebstackScreenshot:
+  /api/screenshot:
     get:
       deprecated: false
-      operationId: apiWebstackScreenshotGET
+      operationId: apiScreenshotGET
       parameters:
       - description: 请求的网站 URL 地址，如果输入的是域名会自动拼接http://
         explode: true
@@ -775,7 +775,7 @@ paths:
           type: string
         style: form
       - description: 设置屏幕窗口大小
-        example: '{width: 1080,height: 1920,isMobile: false}'
+        example: 1080x1920
         explode: true
         in: query
         name: viewport
