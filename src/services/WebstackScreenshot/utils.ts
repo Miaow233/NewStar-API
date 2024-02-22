@@ -6,9 +6,6 @@ import type { ScreenshotClip, ScreenshotOptions, Viewport } from 'puppeteer-core
 import { args } from './args'
 import { TlaunchOptions, TtypeOptions } from './types'
 
-const { WEBSTACK_SCREENSHOT_SERVERLESS, WEBSTACK_SCREENSHOT_FONTS, WEBSTACK_SCREENSHOT_PUPPETEER_EXECUTABLE_PATH } =
-  process.env
-
 const TMP_DIR_PATH = join(tmpdir(), 'WebStack-Screenshot')
 if (!existsSync(TMP_DIR_PATH)) mkdirSync(TMP_DIR_PATH, { recursive: true })
 

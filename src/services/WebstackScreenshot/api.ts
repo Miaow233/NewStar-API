@@ -3,6 +3,7 @@ import puppeteer from 'puppeteer-core'
 import { TtypeOptions } from './types'
 import { isHttp, launch, goto, screenshot, isString, isObject, parseViewportString, cache } from './utils'
 import Service from '../Service'
+import config from '@/config'
 export { TtypeOptions } from './types'
 
 let browser: Browser | null
@@ -27,7 +28,7 @@ async function takeScreenshot(data: TtypeOptions): Promise<string | Buffer> {
         const launchOpt = await launch()
         if (!browser)
             browser = await puppeteer.launch({
-                executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+                executablePath: config.PUPPETEER_EXECUTABLE_PATH,
                 ...launchOpt,
             })
 

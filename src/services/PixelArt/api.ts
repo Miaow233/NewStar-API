@@ -1,7 +1,7 @@
 import { createCanvas, loadImage } from 'canvas'
 import Service from '../Service'
 import path from 'path'
-import config from '../../config'
+import config from '@/config'
 import { Pixelit } from './pixelit'
 
 /**

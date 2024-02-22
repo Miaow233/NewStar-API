@@ -41,7 +41,7 @@ export const apiTranslateGET = async (request: OpenApiRequest, response: Respons
     await Controller.handleRequest(request, response, service.apiTranslateGET)
 }
 
-export const apiWebstackScreenshotGET = async (request: OpenApiRequest, response: Response) => {
+export const apiScreenshotGET = async (request: OpenApiRequest, response: Response) => {
     function cache(cache: number | boolean | undefined): string | undefined {
         // Do not use http forced caching
         // catch is false or cache is zero
