@@ -1,8 +1,8 @@
 import { createCanvas, loadImage } from 'canvas'
-import Service from './Service'
+import Service from '../Service'
 import path from 'path'
-import config from '../config'
-import { Pixelit } from './pixel-art/pixelit'
+import config from '../../config'
+import { Pixelit } from './pixelit'
 
 /**
  * Pixel-art

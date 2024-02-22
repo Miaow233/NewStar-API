@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Service from './Service'
+import Service from '../Service'
 
 const WallpaperCategoryId = {
     girl: '4e4d610cdf714d2966000000',
@@ -17,29 +17,29 @@ export interface WallpaperApiModel {
     /**
      * [true, false]
      */
-    adult?: boolean;
+    adult?: boolean
     /**
      * 壁纸分类[girl, animal, landscape, anime, drawn, mechanics, boy, game, text]
      */
-    category: string;
+    category: string
     /**
      * 要获取几张
      */
-    limit?: number;
+    limit?: number
     /**
      * 壁纸排序方式[hot, new]
      */
-    order: string;
+    order: string
     /**
      * 从第几张开始
      */
-    skip?: number;
-    [property: string]: any;
+    skip?: number
+    [property: string]: any
 }
 
 /**
  * Fetches vertical wallpapers based on the specified category and optional parameters.
- * 
+ *
  * @param category The category of the wallpaper (e.g. "girl", "animal", "landscape").
  * @param limit The maximum number of wallpapers to retrieve (optional).
  * @param skip The number of wallpapers to skip (optional).
@@ -52,7 +52,7 @@ export const apiWallpaperVerticalGET = async ({ category, limit, skip, adult, or
         //@ts-ignore
         let categoryId = WallpaperCategoryId[category]
 
-        let baseUrl = `http://service.aibizhi.adesk.com/v1/wallpaper/category/${categoryId}/vertical`
+        let baseUrl = `http://service.aibizhi.adesk.com/v1/vertical/category/${categoryId}/vertical`
         let params = {
             limit: limit,
             skip: skip,

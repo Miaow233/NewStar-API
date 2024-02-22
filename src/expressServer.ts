@@ -72,10 +72,12 @@ export default class ExpressServer {
         this.app.use(
             OpenAPIValidatorMiddleware({
                 apiSpec: this.openApiPath,
-                validateResponses: false,
                 validateRequests: false,
+                validateResponses: false,
+                validateSecurity: false,
                 operationHandlers: path.join(__dirname),
                 fileUploader: { dest: config.FILE_UPLOAD_PATH },
+                validateFormats:'full'
             })
         )
 

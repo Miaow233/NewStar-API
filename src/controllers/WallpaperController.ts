@@ -10,7 +10,7 @@ import { OpenApiRequest } from 'express-openapi-validator/dist/framework/types'
 import { Response } from 'express'
 
 import Controller from './Controller'
-import * as service from '../services/WallpaperService'
+import * as service from '../services/Wallpaper/api'
 export const apiWallpaperVerticalGET = async (request: OpenApiRequest, response: Response) => {
     await Controller.handleRequest(request, response, service.apiWallpaperVerticalGET)
 }

@@ -734,6 +734,134 @@ paths:
       x-apifox-status: developing
       x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-149027292-run
       x-eov-operation-handler: controllers/WallpaperController
+  /api/WebstackScreenshot:
+    get:
+      deprecated: false
+      operationId: apiWebstackScreenshotGET
+      parameters:
+      - description: 请求的网站 URL 地址，如果输入的是域名会自动拼接http://
+        explode: true
+        in: query
+        name: url
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 图片类型，png、jpeg、webp
+        example: jpeg
+        explode: true
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 缓存，默认缓存为 1 天，传入false禁用缓存，传入数字如:123则缓存 123 秒
+        example: "86400"
+        explode: true
+        in: query
+        name: cache
+        required: false
+        schema:
+          type: number
+        style: form
+      - description: 图片质量0-100之间，如果是图片类型是png则被忽略
+        example: "50"
+        explode: true
+        in: query
+        name: quality
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 设置屏幕窗口大小
+        example: '{width: 1080,height: 1920,isMobile: false}'
+        explode: true
+        in: query
+        name: viewport
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 截取完整页面
+        example: "false"
+        explode: true
+        in: query
+        name: fullPage
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: 是否是手机端
+        example: "false"
+        explode: true
+        in: query
+        name: isMobile
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: 页面渲染完成后等待
+        example: "1000"
+        explode: true
+        in: query
+        name: await
+        required: false
+        schema:
+          type: number
+        style: form
+      - description: 截图超时，0表示无限制(单位毫秒)
+        example: "30000"
+        explode: true
+        in: query
+        name: timeout
+        required: false
+        schema:
+          type: number
+        style: form
+      - description: 图片编码，binary、base64
+        example: binary
+        explode: true
+        in: query
+        name: encoding
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 剪切指定区域，接收 4 个单位以英文逗号分割分别是x,y,width,height
+        explode: true
+        in: query
+        name: clip
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 在什么时机触发截图，详细请看下方另一个表格
+        example: load
+        explode: true
+        in: query
+        name: waitUntil
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                properties: {}
+                type: object
+                x-apifox-orders: []
+                x-apifox-ignore-properties: []
+          description: 成功
+      security: []
+      summary: 网页截图
+      tags: []
+      x-apifox-folder: ""
+      x-apifox-status: developing
+      x-run-in-apifox: https://apifox.com/web/project/4024988/apis/api-149349847-run
+      x-eov-operation-handler: controllers/DefaultController
 components:
   requestBodies:
     inline_object:
